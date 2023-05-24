@@ -1,6 +1,6 @@
 import express, { Router, Request, Response } from "express";
-import { PASTRIES as pastries } from "./mocks";
-import { Pastrie } from "./pastrie";
+import { PASTRIES as pastries, INGREDIENTS_LISTS as ingredients } from "./mocks";
+import { Pastrie, List } from "./pastrie";
 
 const router: Router = express.Router();
 
@@ -31,6 +31,28 @@ router.get("/pastries/:start?/:end", function (req: Request, res: Response) {
 
     if (p)
         res.json(p);
+});
+
+// même requete mais ordonné
+router.get("/pastries/order-quantity/:start?/:end", function (req: Request, res: Response) {
+    const start: string = req.params.start;
+    const end: string = req.params.end;
+
+    // by quantity order 
+    pastries.sort((a, b) => b.quantity - a.quantity)
+
+    let p: Pastrie[] = end ? pastries.slice(parseInt(start), parseInt(end) + 1) : pastries.slice(parseInt(start))
+
+    if (p)
+        res.json(p);
+});
+
+router.get("/ingredient/:id", function (req: Request, res: Response) {
+    const id: string = req.params.id
+    const i: string[] | undefined = ingredients.find(i => i.id == id)?.list;
+
+    if (i)
+        res.json(i);
 });
 
 router.get('*', function (req: Request, res: Response) {
