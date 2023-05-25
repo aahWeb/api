@@ -4,6 +4,9 @@ import { Pastrie, List } from "./pastrie";
 
 const router: Router = express.Router();
 
+// optimisation dans le comptage des pastries 
+const COUNT : number = pastries.length;
+
 // all pastries
 router.get("/pastries", function (req: Request, res: Response) {
     res.json(pastries);
@@ -58,6 +61,10 @@ router.get("/pastries/order-quantity/:start?/:end", function (req: Request, res:
         res.json(p);
 });
 
+// count number pastries 
+router.get("/pastries-count", function (req: Request, res: Response) {
+    res.json(COUNT);
+});
 
 
 router.get("/ingredient/:id", function (req: Request, res: Response) {
