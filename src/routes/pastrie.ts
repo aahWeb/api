@@ -1,6 +1,6 @@
 import express, { Router, Request, Response } from "express";
-import { PASTRIES as pastries, INGREDIENTS_LISTS as ingredients } from "./mocks";
-import { Pastrie, List } from "./pastrie";
+import { PASTRIES as pastries } from "./../mocks";
+import { Pastrie } from "./../pastrie";
 
 const router: Router = express.Router();
 
@@ -64,15 +64,6 @@ router.get("/pastries/order-quantity/:start?/:end", function (req: Request, res:
 // count number pastries 
 router.get("/pastries-count", function (req: Request, res: Response) {
     res.json(COUNT);
-});
-
-
-router.get("/ingredient/:id", function (req: Request, res: Response) {
-    const id: string = req.params.id
-    const i: string[] | undefined = ingredients.find(i => i.id == id)?.list;
-
-    if (i)
-        res.json(i);
 });
 
 router.get('*', function (req: Request, res: Response) {
