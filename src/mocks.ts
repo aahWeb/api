@@ -1,4 +1,5 @@
 import { Pastrie, List } from './pastrie';
+import { User } from './user';
 
 export const PASTRIES: Pastrie[] = [
     {
@@ -213,3 +214,5 @@ export const INGREDIENTS_LISTS: List[]  = [
 
 export const Max : number = 3 ;
 export let Count : number = 0 ;
+
+export const users : User[] = [];
