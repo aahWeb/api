@@ -41,7 +41,18 @@ router.get("/pastries/order-quantity/:start?/:end", function (req: Request, res:
     // by quantity order 
     pastries.sort((a, b) => b.quantity - a.quantity)
 
-    let p: Pastrie[] = end ? pastries.slice(parseInt(start), parseInt(end) + 1) : pastries.slice(parseInt(start))
+    const p: Pastrie[] = end ? pastries.slice(parseInt(start), parseInt(end) + 1) : pastries.slice(parseInt(start))
+
+    if (p)
+        res.json(p);
+});
+
+router.get("/pastries/search/:word", function (req: Request, res: Response) {
+    const word: string = req.params.word;
+    const re = new RegExp(word.trim(), 'i');
+
+    // by quantity order 
+    const p: Pastrie[] = pastries.filter(p => p.name.match(re));
 
     if (p)
         res.json(p);
