@@ -18,6 +18,17 @@ router.get("/pastrie/:id", function (req: Request, res: Response) {
         res.json(p);
 });
 
+router.get("/pastries-search/:word", function (req: Request, res: Response) {
+    const word: string = req.params.word;
+    const re = new RegExp(word.trim(), 'i');
+
+    // by quantity order 
+    const p: Pastrie[] = pastries.filter(p => p.name.match(re));
+
+    if (p)
+        res.json(p);
+});
+
 /**
  * Exemple de récupération des données avec start et end dans l'url 
  * Dans l'exemple ci-dessous on récupère deux pastries 
@@ -47,16 +58,7 @@ router.get("/pastries/order-quantity/:start?/:end", function (req: Request, res:
         res.json(p);
 });
 
-router.get("/pastries/search/:word", function (req: Request, res: Response) {
-    const word: string = req.params.word;
-    const re = new RegExp(word.trim(), 'i');
 
-    // by quantity order 
-    const p: Pastrie[] = pastries.filter(p => p.name.match(re));
-
-    if (p)
-        res.json(p);
-});
 
 router.get("/ingredient/:id", function (req: Request, res: Response) {
     const id: string = req.params.id
