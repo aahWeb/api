@@ -10,10 +10,15 @@ router.post("/user", function (req: Request, res: Response) {
     if (users.find(user => user.email == email)) { res.status(404); return; }
 
     users.push({ email, name, address });
-
     res.status(201).json({
         message: 'Objet créé !'
     });
 });
+
+router.get('/users', function (req: Request, res: Response) {
+
+    res.json(users);
+}
+);
 
 export default router;
