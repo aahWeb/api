@@ -1,3 +1,0 @@
-DATA_URL="/Data/train.csv"
-API_URL="http://localhost"
-API_PORT=3002
