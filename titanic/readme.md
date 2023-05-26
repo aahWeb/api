@@ -1,4 +1,4 @@
-## Installation
+## Installation/configuration
 
 Tout est en place dans l'API cependant si vous voulez en savoir plus sur la configuration de celle-ci on détaille ci-dessous l'ensemble des dépendances que l'on a installé.
 
