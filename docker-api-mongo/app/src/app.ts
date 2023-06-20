@@ -13,6 +13,8 @@ app.use(cors());
 app.use(express.urlencoded());
 app.use(express.json());
 
+open('yams');
+
 // router
 app.use(router);
 

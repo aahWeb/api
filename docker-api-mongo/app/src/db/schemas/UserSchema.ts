@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { Status } from "../../user";
 
-interface IUser {
+export interface IUser {
   _id: string;
   name: string;
   password: string;
@@ -24,6 +24,7 @@ const userSchema = new Schema<IUser>({
   },
   email: {
     type: String,
+    unique: true,
     required: true
   },
   address: String,

@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-interface IPastrie {
+export interface IPastrie {
   _id: string;
   ref: string;
   name: string;
