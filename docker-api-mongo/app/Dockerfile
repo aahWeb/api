@@ -2,7 +2,7 @@
 FROM node:18
 
 # Set the working directory inside the container
-WORKDIR /src
+WORKDIR /
 
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expose a port (if required)
-EXPOSE 3002
+EXPOSE 3001
 
 # Specify the command to run the application
 CMD ["npm", "run", "dev"]

@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mongo:
+    container_name: docker_mongo_challenge
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes: 
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  web:
+    container_name: node_web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mongo
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGO_HOST=mongo
+    volumes:
+      - ./app:/app
+
+volumes:
+  mongo_data:
