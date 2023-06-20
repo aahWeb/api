@@ -3,7 +3,7 @@ import { Status } from "../../user";
 
 interface IUser {
   _id: string;
-  username: string;
+  name: string;
   password: string;
   email: string;
   address?: string;
@@ -11,7 +11,7 @@ interface IUser {
 };
 
 const userSchema = new Schema<IUser>({
-  username: {
+  name: {
     type: String,
     unique: true,
     minlength: 3,
