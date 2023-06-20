@@ -90,9 +90,7 @@ router.get("/pastries/order-quantity/:start?/:end", function (req: Request, res:
 // count number pastries 
 router.get("/pastries-count", function (req: Request, res: Response) {
     // On compte le nombre de pâtisseries en db (countDocuments)
-    Pastrie.countDocuments({}, (err: string, count: number) => {
-        if (err)
-            return res.status(500).json(err);
+    Pastrie.countDocuments({}).then((count: number) => {
         return res.status(200).json({ count });
     }).catch((err: string) => {
         console.error(err);
