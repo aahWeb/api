@@ -3,7 +3,7 @@ import router from "./routes/index";
 
 import cors from "cors";
 
-import { open } from './database';
+import { open } from './db';
 
 const port :number = 3001;
 const app : Express = express();
