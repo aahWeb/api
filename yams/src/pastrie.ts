@@ -1,5 +1,5 @@
 export interface Pastrie {
-  id: string;
+  id?: string;
   ref: string;
   name: string;
   description: string;

@@ -1,6 +1,8 @@
 import express, { Router, Request, Response } from "express";
 import { PASTRIES } from "./../mocks";
 import { Pastrie } from "./../pastrie";
+import { authentified } from "../middleware";
+import { trimAll } from "../utils/helpers";
 
 const router: Router = express.Router();
 
@@ -9,7 +11,7 @@ const pastries: Pastrie[] = PASTRIES;
 
 // all pastries
 router.get("/pastries", function (req: Request, res: Response) {
-    res.json(pastries);
+    return res.json(pastries);
 });
 
 // id pastries
@@ -18,9 +20,9 @@ router.get("/pastrie/:id", function (req: Request, res: Response) {
     const p: Pastrie | undefined = pastries.find(p => p.id == id);
     
     if (p) {
-        res.json(p);
+        return res.json(p);
     } else {
-        res.status(404).json({
+        return res.status(404).json({
             message: 'Pâtisserie non trouvée !'
         });
     }
@@ -71,11 +73,64 @@ router.get("/pastries/order-quantity/:offset?/:limit", function (req: Request, r
 
 // count number pastries 
 router.get("/pastries-count", function (req: Request, res: Response) {
-    res.json(pastries.length);
+    return res.json(pastries.length);
 });
 
+// ajouter une pâtisserie dans le mock
+router.post("/pastrie", authentified, function (req: Request, res: Response) {
+    try {
+        const { ref, name, quantity, description, url, order, like, tags, choice } = trimAll(req.body);
+        const p: Pastrie = { ref, name, quantity, description, url, order, like, tags, choice };
+
+        if (!p.ref || !p.name || !p.quantity) {
+            return res.status(400).json({
+                message: 'Données invalides !'
+            });
+        }
+
+        // on récupère le dernier id et on incrémente
+        const lastId: string = pastries[pastries.length - 1]?.id || "0";
+        p.id = (parseInt(lastId) + 1).toString();
+
+        pastries.push(p);
+        return res.json(p);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+});
+
+// modifier une pâtisserie dans le mock
+router.put("/pastrie/:id", authentified, function (req: Request, res: Response) {
+    try {
+        const id: string = req.params.id;
+        const { ref, name, quantity, description, url, order, like, tags, choice } = trimAll(req.body);
+        const p: Pastrie | undefined = pastries.find(p => p.id == id);
+
+        if (!p) {
+            return res.status(404).json({
+                message: 'Pâtisserie non trouvée !'
+            });
+        }
+
+        p.ref = ref;
+        p.name = name;
+        p.quantity = quantity;
+        p.description = description;
+        p.url = url;
+        p.order = order;
+        p.like = like;
+        p.tags = tags;
+        p.choice = choice;
+
+        return res.json(p);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+});
+
+
 router.get('*', function (req: Request, res: Response) {
-    res.status(404).json({ error: "Not found" })
+    return res.status(404).json({ error: "Not found" })
 });
 
 export default router;
