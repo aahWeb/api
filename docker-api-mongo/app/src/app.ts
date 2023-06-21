@@ -5,8 +5,8 @@ import cors from "cors";
 
 import { open } from './db';
 
-const port :number = 3001;
-const app : Express = express();
+const port: number = 3002;
+const app: Express = express();
 
 app.use(cors());
 
@@ -18,6 +18,10 @@ open('yams');
 // router
 app.use(router);
 
-app.listen(port, () =>
-  console.log(`listen http://localhost:${port}`),
-);
+open('yams').then(() => {
+  app.listen(port, () =>{ 
+    console.log("server")
+    console.log(`http://localhost:${port}`)
+  } )
+ 
+})
