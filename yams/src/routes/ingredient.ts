@@ -1,6 +1,7 @@
 import express, { Router, Request, Response } from "express";
 import { INGREDIENTS_LISTS } from "./../mocks";
 import { List } from "./../pastrie";
+import { authentified } from "../middleware";
 
 const router: Router = express.Router();
 const ingredients: List[] = INGREDIENTS_LISTS;
@@ -9,7 +10,7 @@ router.get('/ingredients', function (req: Request, res: Response) {
     return res.json(ingredients);
 });
 
-router.put("/ingredient/:id", function (req: Request, res: Response) {
+router.put("/ingredient/:id", authentified, function (req: Request, res: Response) {
     const id: string = req.params.id;
     const list: string[] = req.body.list;
 
@@ -24,7 +25,7 @@ router.put("/ingredient/:id", function (req: Request, res: Response) {
     }
 });
 
-router.post("/ingredient", function (req: Request, res: Response) {
+router.post("/ingredient", authentified, function (req: Request, res: Response) {
     try {
         const list: string[] = req.body;
         const id: string = (parseInt(ingredients[ingredients.length - 1].id) + 1).toString() || "1";  // get last id and increment it
@@ -48,7 +49,7 @@ router.get("/ingredient/:id", function (req: Request, res: Response) {
     }
 });
 
-router.delete("/ingredient/:id", function (req: Request, res: Response) {
+router.delete("/ingredient/:id", authentified, function (req: Request, res: Response) {
     const id: string = req.params.id;
     const i: List | undefined = ingredients.find(i => i.id == id);
     if (i) {
