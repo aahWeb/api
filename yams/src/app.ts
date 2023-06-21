@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import router from "./routes/index";
+import cookieParser from 'cookie-parser';
 
 import cors from "cors";
 
@@ -10,6 +11,7 @@ app.use(cors());
 
 app.use(express.urlencoded());
 app.use(express.json());
+app.use(cookieParser());
 
 // router
 app.use(router);
