@@ -210,9 +210,9 @@ export const INGREDIENTS_LISTS: List[]  = [
         "nostrud"
       ]
     }
-  ];
+];
 
 export const Max : number = 3 ;
 export let Count : number = 0 ;
 
-export const users : User[] = [];
+export const USERS : User[] = [];
