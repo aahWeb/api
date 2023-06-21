@@ -1,3 +1,6 @@
 node_modules/
 dist/
 package-lock.json
+yams/pnpm-lock.yaml
+
+docker-api-mongo/app/pnpm-lock.yaml

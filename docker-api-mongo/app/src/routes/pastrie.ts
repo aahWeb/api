@@ -1,35 +1,57 @@
 import express, { Router, Request, Response } from "express";
-import { PASTRIES as pastries } from "../mocks";
-import { Pastrie } from "../pastrie";
+import { Pastrie, IPastrie } from "../db/schemas/PastrieSchema";
 
 const router: Router = express.Router();
 
-// optimisation dans le comptage des pastries 
-const COUNT : number = pastries.length;
-
-// all pastries
+// recherche de toutes les pâtisseries
 router.get("/pastries", function (req: Request, res: Response) {
-    res.json(pastries);
+    // On recherche toutes les pâtisseries en db
+    Pastrie.find({}, (err: string, pastries: IPastrie[] | []) => {
+        if (err)
+            return res.status(500).json(err);
+        return res.status(200).json(pastries);
+    }).catch((err: string) => {
+        console.error(err);
+        return res.status(500).json(err);
+    });
 });
 
-// id pastries
+// recherche d'une pâtisserie par son id
 router.get("/pastrie/:id", function (req: Request, res: Response) {
-    const id: string = req.params.id
-    const p: Pastrie | undefined = pastries.find(p => p.id == id);
+    const id: string = req.params.id;
 
-    if (p)
-        res.json(p);
+    // on va chercher une patisserie en fonction de l'id saisie en paramètre (findById)
+    Pastrie.findById(id, (err: string, pastrie: IPastrie | null) => {
+        if (err)
+            return res.status(500).json(err);
+        if (!pastrie)
+            return res.status(404).json({ message: "Pastrie not found" });
+        return res.status(200).json(pastrie);
+    }).catch((err: string) => {
+        console.error(err);
+        return res.status(500).json(err);
+    });
 });
 
+/***
+ * Recherche de pâtisseries par nom
+ * On va rechercher des pâtisseries avec le nom saisit en paramètre (find)
+ * api/pastries-search/:word
+ * Exemple : api/pastries-search/chocolat
+ */
 router.get("/pastries-search/:word", function (req: Request, res: Response) {
     const word: string = req.params.word;
     const re = new RegExp(word.trim(), 'i');
 
-    // by quantity order 
-    const p: Pastrie[] = pastries.filter(p => p.name.match(re));
-
-    if (p)
-        res.json(p);
+    // On va rechercher des pâtisseries avec le nom saisit en paramètre (find)
+    Pastrie.find({ name: re }, (err: string, pastries: IPastrie[] | []) => {
+        if (err)
+            return res.status(500).json(err);
+        return res.status(200).json(pastries);
+    }).catch((err: string) => {
+        console.error(err);
+        return res.status(500).json(err);
+    });
 });
 
 /**
@@ -37,33 +59,58 @@ router.get("/pastries-search/:word", function (req: Request, res: Response) {
  * Dans l'exemple ci-dessous on récupère deux pastries 
  * api/pastries/0/2
  */
-router.get("/pastries/:start?/:end", function (req: Request, res: Response) {
-    const start: string = req.params.start;
-    const end: string = req.params.end;
+router.get("/pastries/:start?/:end", async function (req: Request, res: Response) {
+    const start: number = parseInt(req.params.start);
+    const end: number = parseInt(req.params.end);
 
-    let p: Pastrie[] = end ? pastries.slice(parseInt(start), parseInt(end) + 1) : pastries.slice(parseInt(start))
 
-    if (p)
-        res.json(p);
+    // limit correspond au nombre de pâtisseries que l'on souhaite récupérer
+    // skip correspond au nombre de pâtisseries que l'on souhaite sauter depuis le début de la liste
+    Pastrie.find({}).limit(end - start + 1).skip(start).then((pastries: IPastrie[] | []) => {
+        return res.status(200).json(pastries);
+    }).catch((err: string) => {
+        console.error(err);
+        return res.status(500).json(err);
+    });
 });
 
-// même requete mais ordonné
+// même requete mais ordonné en fonction de la quantité
 router.get("/pastries/order-quantity/:start?/:end", function (req: Request, res: Response) {
-    const start: string = req.params.start;
-    const end: string = req.params.end;
+    const start: number = parseInt(req.params.start);
+    const end: number = parseInt(req.params.end);
 
-    // by quantity order 
-    pastries.sort((a, b) => b.quantity - a.quantity)
-
-    const p: Pastrie[] = end ? pastries.slice(parseInt(start), parseInt(end) + 1) : pastries.slice(parseInt(start))
-
-    if (p)
-        res.json(p);
+    Pastrie.find({}).limit(end - start + 1).skip(start).sort({ quantity: 1 }).then((pastries: IPastrie[] | []) => {
+        return res.status(200).json(pastries);
+    }).catch((err: string) => {
+        console.error(err);
+        return res.status(500).json(err);
+    });
 });
 
 // count number pastries 
 router.get("/pastries-count", function (req: Request, res: Response) {
-    res.json(COUNT);
+    // On compte le nombre de pâtisseries en db (countDocuments)
+    Pastrie.countDocuments({}, (err: string, count: number) => {
+        if (err)
+            return res.status(500).json(err);
+        return res.status(200).json({ count });
+    }).catch((err: string) => {
+        console.error(err);
+        return res.status(500).json(err);
+    });
+});
+
+// créer une pâtisserie
+router.post("/pastrie", function (req: Request, res: Response) {
+    const pastrie: IPastrie = req.body;
+    Pastrie.create(pastrie, (err: string, pastrie: IPastrie) => {
+        if (err)
+            return res.status(500).json(err);
+        return res.status(201).json(pastrie);
+    }).catch((err: string) => {
+        console.error(err);
+        return res.status(500).json(err);
+    });
 });
 
 router.get('*', function (req: Request, res: Response) {
