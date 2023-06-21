@@ -90,9 +90,7 @@ router.get("/pastries/order-quantity/:start?/:end", function (req: Request, res:
 // count number pastries 
 router.get("/pastries-count", function (req: Request, res: Response) {
     // On compte le nombre de pâtisseries en db (countDocuments)
-    Pastrie.countDocuments({}, (err: string, count: number) => {
-        if (err)
-            return res.status(500).json(err);
+    Pastrie.countDocuments({}).then((count: number) => {
         return res.status(200).json({ count });
     }).catch((err: string) => {
         console.error(err);
@@ -107,6 +105,35 @@ router.post("/pastrie", function (req: Request, res: Response) {
         if (err)
             return res.status(500).json(err);
         return res.status(201).json(pastrie);
+    }).catch((err: string) => {
+        console.error(err);
+        return res.status(500).json(err);
+    });
+});
+
+// Mettre à jour une pâtisserie
+router.put("/pastrie/:id", function (req: Request, res: Response) {
+    const id: string = req.params.id;
+    const pastrie: IPastrie = req.body;
+    Pastrie.updateOne({ _id: id }, pastrie, (err: string, pastrie: IPastrie | null) => {
+        if (err)
+            return res.status(500).json(err);
+        if (!pastrie)
+            return res.status(404).json({ message: "Pastrie not found" });
+        return res.status(200).json(pastrie);
+    }).catch((err: string) => {
+        console.error(err);
+        return res.status(500).json(err);
+    });
+});
+
+// Supprimer une pâtisserie
+router.delete("/pastrie/:id", function (req: Request, res: Response) {
+    const id: string = req.params.id;
+    Pastrie.deleteOne({ _id: id }, (err: string) => {
+        if (err)
+            return res.status(500).json(err);
+        return res.status(204).json();
     }).catch((err: string) => {
         console.error(err);
         return res.status(500).json(err);
