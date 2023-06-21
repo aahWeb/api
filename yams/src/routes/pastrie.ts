@@ -82,6 +82,7 @@ router.post("/pastrie", authentified, function (req: Request, res: Response) {
         const { ref, name, quantity, description, url, order, like, tags, choice } = trimAll(req.body);
         const p: Pastrie = { ref, name, quantity, description, url, order, like, tags, choice };
 
+        // on vérifie les champs obligatoires
         if (!p.ref || !p.name || !p.quantity) {
             return res.status(400).json({
                 message: 'Données invalides !'
@@ -106,12 +107,14 @@ router.put("/pastrie/:id", authentified, function (req: Request, res: Response) 
         const { ref, name, quantity, description, url, order, like, tags, choice } = trimAll(req.body);
         const p: Pastrie | undefined = pastries.find(p => p.id == id);
 
+        // on vérifie que la pâtisserie existe
         if (!p) {
             return res.status(404).json({
                 message: 'Pâtisserie non trouvée !'
             });
         }
 
+        // on assigne les nouvelles valeurs à la pâtisserie
         p.ref = ref;
         p.name = name;
         p.quantity = quantity;
