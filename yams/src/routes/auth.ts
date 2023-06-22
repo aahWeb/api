@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import { trimAll } from "../utils/helpers";
 import passwordValidator from 'password-validator'
 import * as validator from 'email-validator'
+import { authentified } from "../middleware";
 
 const schema = new passwordValidator().is().min(8)
                                       .is().max(20)

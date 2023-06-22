@@ -92,6 +92,7 @@ router.post("/pastrie", authentified, function (req: Request, res: Response) {
         // on récupère le dernier id et on incrémente
         const lastId: string = pastries[pastries.length - 1]?.id || "0";
         p.id = (parseInt(lastId) + 1).toString();
+        p.tags = tags.split(/\s*,\s*/);
 
         pastries.push(p);
         return res.json(p);
@@ -122,7 +123,7 @@ router.put("/pastrie/:id", authentified, function (req: Request, res: Response) 
         p.url = url;
         p.order = order;
         p.like = like;
-        p.tags = tags;
+        p.tags = tags.split(/\s*,\s*/)
         p.choice = choice;
 
         return res.json(p);
