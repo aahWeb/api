@@ -7,7 +7,10 @@ import cors from "cors";
 const port :number = 3001;
 const app : Express = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:4200',
+  credentials: true
+}));
 
 app.use(express.urlencoded());
 app.use(express.json());
