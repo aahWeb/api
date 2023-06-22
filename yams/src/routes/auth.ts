@@ -99,4 +99,10 @@ router.post("/register", function (req: Request, res: Response) {
 
 });
 
+
+router.get('/logout', authentified, function (req: Request, res: Response) {
+    res.clearCookie('token');
+    return res.status(200).json({message: "Vous êtes bien déconnecté"});
+});
+
 export default router;
